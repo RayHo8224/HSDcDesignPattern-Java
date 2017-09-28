@@ -21,12 +21,20 @@ import com.hsdc.dp.intf.domain.prototype.PurchaseOrderLineItem;
 	private String customerName;
 	private List<PurchaseOrderLineItem> items = null;
 	
+	private static final Object lock = new Object();
+	private static PurchaseOrderDo purchaseOrderDo;
+	
 	private PurchaseOrderDo() {
 		items = new ArrayList<PurchaseOrderLineItem>();
 	}
 	
-	static PurchaseOrderDo createInstance() {
-		return new PurchaseOrderDo();
+	public static PurchaseOrderDo createInstance() {
+		if(purchaseOrderDo==null) {
+			synchronized(lock){
+				purchaseOrderDo=new PurchaseOrderDo();
+			}
+		}
+		return purchaseOrderDo;
 	}
 	
 	void setPurchaseOrderLineItem(List<PurchaseOrderLineItem> items) {
